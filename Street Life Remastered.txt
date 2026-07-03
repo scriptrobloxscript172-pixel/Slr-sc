@@ -1136,7 +1136,7 @@ end)
 
 
 local Window = lib:Create({
-    UI = {Title = "Street Life Remastered V1"},
+    UI = {Title = "LENGER STORE 🚀"},
     Loader = true
 })
 
