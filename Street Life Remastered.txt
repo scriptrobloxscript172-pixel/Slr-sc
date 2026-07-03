@@ -133,64 +133,50 @@ function lib:Create(options)
 local ParticleHolder = Instance.new("Frame")
 ParticleHolder.Name = "ParticleHolder"
 ParticleHolder.Parent = mainFrame
-ParticleHolder.Size = UDim2.new(1,0,1,0)
 ParticleHolder.BackgroundTransparency = 1
 ParticleHolder.BorderSizePixel = 0
+ParticleHolder.Size = UDim2.new(1, 0, 1, 0)
 ParticleHolder.ClipsDescendants = true
-ParticleHolder.ZIndex = 2
+ParticleHolder.ZIndex = 1
 
---// Neon Light Streaks
-
+--// Neon Particles
 local TweenService = game:GetService("TweenService")
 
-local function CreateStreak()
-	local Line = Instance.new("Frame")
-	Line.Parent = ParticleHolder
-	Line.AnchorPoint = Vector2.new(0.5,0.5)
-	Line.Size = UDim2.new(0,120,0,3)
-	Line.Position = UDim2.new(-0.2,0,math.random(),0)
-	Line.BackgroundColor3 = Color3.fromRGB(255,0,255)
-	Line.BorderSizePixel = 0
-	Line.Rotation = -25
-	Line.ZIndex = 2
+for i = 1, 30 do
+	local Dot = Instance.new("Frame")
+	Dot.Parent = ParticleHolder
+	Dot.Size = UDim2.new(0, math.random(2,5), 0, math.random(2,5))
+	Dot.Position = UDim2.new(math.random(),0,math.random(),0)
+	Dot.BackgroundColor3 = Color3.fromRGB(170,0,255)
+	Dot.BorderSizePixel = 0
+	Dot.BackgroundTransparency = 0.2
+	Dot.ZIndex = 1
 
 	local Corner = Instance.new("UICorner")
 	Corner.CornerRadius = UDim.new(1,0)
-	Corner.Parent = Line
+	Corner.Parent = Dot
 
-	local Glow = Instance.new("UIStroke")
-	Glow.Parent = Line
-	Glow.Color = Color3.fromRGB(255,0,255)
-	Glow.Thickness = 2
-
-	local Tween = TweenService:Create(
-		Line,
-		TweenInfo.new(2.5, Enum.EasingStyle.Linear),
-		{
-			Position = UDim2.new(1.2,0,math.random(),0),
-			BackgroundTransparency = 1
-		}
-	)
-
-	Tween:Play()
-
-	Tween.Completed:Connect(function()
-		Line:Destroy()
+	task.spawn(function()
+		while Dot.Parent do
+			local Tween = TweenService:Create(
+				Dot,
+				TweenInfo.new(math.random(3,6), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+				{
+					Position = UDim2.new(math.random(),0,math.random(),0),
+					BackgroundTransparency = math.random(2,8)/10
+				}
+			)
+			Tween:Play()
+			Tween.Completed:Wait()
+		end
 	end)
 end
-
-task.spawn(function()
-	while true do
-		CreateStreak()
-		task.wait(0.4)
-	end
-end)
     local innerFrame = create("Frame", {
-        Parent = mainFrame,
-        Size = UDim2.new(1, 0, 1, 0),
-        BackgroundTransparency = 1,
-        ClipsDescendants = true
-    })
+    Parent = ParticleHolder,
+    Size = UDim2.new(1,0,1,0),
+    BackgroundTransparency = 1,
+    ClipsDescendants = true
+})
     create("UICorner", {Parent = innerFrame, CornerRadius = UDim.new(0, 6)})
 
     local dragging, dragInput, dragStart, startPos
